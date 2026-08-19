@@ -8,7 +8,7 @@
 
 #include "connection.h"
 
-namespace app::database
+namespace app::db1
 {
 
     struct SQLiteQuery

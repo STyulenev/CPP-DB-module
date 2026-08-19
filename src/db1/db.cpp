@@ -1,7 +1,7 @@
 ﻿#include "db.h"
 #include "transaction.h"
 
-namespace app::database
+namespace app::db1
 {
 
     Db::Db(const DatabaseType type) :

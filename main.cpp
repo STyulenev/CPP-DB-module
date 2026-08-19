@@ -5,7 +5,7 @@
 
 void db1Test()
 {
-    using namespace app::database;
+    using namespace app::db1;
 
     Db db(DatabaseType::SQLITE);
 
@@ -18,7 +18,7 @@ void db1Test()
 
     {
         bool status{ false };
-        std::lock_guard<std::recursive_mutex> lock (db.getLocker());
+        std::lock_guard<std::recursive_mutex> lock(db.getLocker());
         Transaction(db, status, [&]() -> void
         {
             status = db.insert<UserTable>(

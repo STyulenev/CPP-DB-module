@@ -2,7 +2,7 @@
 
 #include <execution>
 
-namespace app::database
+namespace app::db1
 {
 
 SQLiteQuery::Row::Row(const size_t &nColumn) :

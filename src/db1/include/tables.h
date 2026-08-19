@@ -45,7 +45,7 @@ inline std::string escapeQuote(std::span<const char> _szSource)
     return source;
 }
 
-namespace app::database
+namespace app::db1
 {
 
 template<typename EntryT>

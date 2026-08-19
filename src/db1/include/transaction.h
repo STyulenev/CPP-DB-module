@@ -2,16 +2,16 @@
 
 #include "db.h"
 
-namespace app::database
+namespace app::db1
 {
 
 class Transaction final
 {
 public:
     template<typename Lambda>
-    Transaction(Db& _db, bool& bRet, Lambda&& lambda) : m_db{ _db }
+    Transaction(Db& _db, bool& status, Lambda&& lambda) : m_db{ _db }
     {
-        bRet = false;
+        status = false;
         std::lock_guard lock(m_db.m_sync);
 
         try
@@ -20,7 +20,7 @@ public:
             lambda();
             endTransaction();
             //commit();
-            bRet = true;
+            status = true;
             return;
         }
         catch (...)

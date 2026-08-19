@@ -2,7 +2,7 @@
 
 #include "db_constants.h"
 
-namespace app::database
+namespace app::db1
 {
 
 void Transaction::beginTransaction()

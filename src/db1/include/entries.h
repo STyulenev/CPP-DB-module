@@ -5,7 +5,7 @@
 #include "db_constants.h"
 #include "db_script.h"
 
-namespace app::database
+namespace app::db1
 {
 
 template<typename EntryT>

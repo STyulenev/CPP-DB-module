@@ -1,6 +1,6 @@
 #pragma once
 
-namespace app::database::consts
+namespace app::db1::consts
 {
 
     struct TableNames

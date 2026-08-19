@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace app::database::scripts
+namespace app::db1::scripts
 {
 
     static constexpr char user_table[] =

@@ -1,6 +1,6 @@
 #include "tables.h"
 
-namespace app::database
+namespace app::db1
 {
 
 UserTable::UserTable()

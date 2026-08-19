@@ -5,7 +5,7 @@
 #include "query.h"
 #include "tables.h"
 
-namespace app::database
+namespace app::db1
 {
 
 template<typename T>

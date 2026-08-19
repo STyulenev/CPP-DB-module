@@ -7,7 +7,7 @@
 
 #include <mutex>
 
-namespace app::database
+namespace app::db1
 {
 
 class IConnection
