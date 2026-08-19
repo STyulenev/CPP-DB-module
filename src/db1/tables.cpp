@@ -3,20 +3,16 @@
 namespace app::db1
 {
 
-UserTable::UserTable()
+std::string UserTable::getInsertQuery(const EntryType& entry)
 {
-
-}
-
-std::string UserTable::getInsertQuery(const EntryType &entry)
-{
-    return std::format("INSERT INTO {} (name) VALUES ('{}');",
-                       EntryType::tableName,
-                       escapeQuote(entry.name)
+    return std::format(
+        "INSERT INTO {} (name) VALUES ('{}');",
+            EntryType::tableName,
+            escapeQuote(entry.name)
     );
 }
 
-UserTable::EntryType UserTable::parse(const SQLiteQuery::Row &row) const
+UserTable::EntryType UserTable::parse(const SQLiteQuery::Row& row) const
 {
     if (EntryType::RowFields::FIELDS_COUNT > row.size())
     {
@@ -31,7 +27,7 @@ UserTable::EntryType UserTable::parse(const SQLiteQuery::Row &row) const
     return r;
 }
 
-UserTable::Entries UserTable::parse(const SQLiteQuery &query) const
+UserTable::Entries UserTable::parse(const SQLiteQuery& query) const
 {
     UserTable::Entries _lh;
 
@@ -44,11 +40,4 @@ UserTable::Entries UserTable::parse(const SQLiteQuery &query) const
     return _lh;
 }
 
-
-
-
-
-
-
-
-} // namespace app::database
+} // namespace app::db1

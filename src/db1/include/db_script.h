@@ -13,4 +13,4 @@ namespace app::db1::scripts
         ");"
 	};
 
-} // namespace app::database::scripts
+} // namespace app::db1::scripts

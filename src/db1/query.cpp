@@ -187,4 +187,4 @@ bool SQLiteQuery::operator !() const
     return m_pRes != 0;
 }
 
-} // namespace app::database
+} // namespace app::db1

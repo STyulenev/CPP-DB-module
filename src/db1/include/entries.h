@@ -32,4 +32,4 @@ struct UserEntry : public IEntry<UserEntry>
 template<> inline std::string IEntry<UserEntry>::tableName = consts::TableNames::userTable;
 template<> inline std::string IEntry<UserEntry>::createTableScript = scripts::user_table;
 
-} // namespace app::database
+} // namespace app::db1

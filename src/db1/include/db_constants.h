@@ -16,4 +16,4 @@ namespace app::db1::consts
         static constexpr auto rollback = "ROLLBACK;";
     };
 
-} // namespace app::database::consts
+} // namespace app::db1::consts
