@@ -20,7 +20,8 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    db1-lib
+    #db1-lib
+    db2-lib
 )
 
 set_target_properties(${PROJECT_NAME}
