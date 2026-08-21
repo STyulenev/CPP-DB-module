@@ -8,3 +8,4 @@ project(Examples
 
 add_subdirectory(db1_example)
 add_subdirectory(db2_example)
+add_subdirectory(utility_example)
