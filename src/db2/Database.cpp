@@ -34,7 +34,7 @@ bool SQLiteDB::generateDB()
 
         if (status != SQLITE_OK)
         {
-            //qDebug() << "Error:" << std::string(messaggeError);
+            // error log ...
             sqlite3_free(messaggeError);
 
             return false;

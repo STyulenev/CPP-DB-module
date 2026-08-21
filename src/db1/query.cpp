@@ -39,14 +39,22 @@ size_t SQLiteQuery::Row::size() const
 bool SQLiteQuery::Row::operator==(Row &other) const
 {
     if (other.m_stopFlag)
+    {
         return m_stopFlag;
+    }
 
     if (m_size != other.m_size)
+    {
         return false;
+    }
 
     for (size_t i = 0; i < m_size; ++i)
+    {
         if (!!strcmp(m_row[i].first.c_str(), other.m_row[i].first.c_str()))
+        {
             return false;
+        }
+    }
 
     return true;
 }
@@ -88,7 +96,7 @@ bool SQLiteQuery::Rows::operator!() const
     return !current;
 }
 
-const SQLiteQuery::Row &SQLiteQuery::Rows::operator*() const
+const SQLiteQuery::Row& SQLiteQuery::Rows::operator*() const
 {
     return current;
 }
@@ -107,9 +115,10 @@ void SQLiteQuery::Rows::operator++()
     }
 }
 
-void SQLiteQuery::Rows::fillRow(SQLiteRow &row)
+void SQLiteQuery::Rows::fillRow(SQLiteRow& row)
 {
     row.clear();
+
     for (auto filedCt = 0; filedCt < current.m_size; filedCt++)
     {
         std::string str;

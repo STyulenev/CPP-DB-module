@@ -2,66 +2,54 @@
 
 #include <format>
 
+#include <sqlite3.h>
+#include <string>
+#include <vector>
+
 namespace app::db2
 {
 
-UserDAO::UserDAO(sqlite3* db) : IDAO(db)
-{
-
-}
-
-UserDAO::~UserDAO()
+UserDAO::UserDAO(sqlite3* db) :
+    IDAO(db)
 {
 
 }
 
 std::vector<UserDTO> UserDAO::selectAll()
 {
-    sqlite3_stmt* stmt = nullptr;
-
-    sqlite3_prepare(_db, std::format("SELECT * FROM {};", UserDTO::tableName).c_str(), -1, &stmt, nullptr);
-    sqlite3_step(stmt);
-
     std::vector<UserDTO> users;
 
-    while (sqlite3_column_text(stmt, 0))
+    try
     {
-        UserDTO user;
-        user.id = std::stoi((char *)sqlite3_column_text(stmt, UserDTO::RowFields::ID));
-        user.name = std::string((char *)sqlite3_column_text(stmt, UserDTO::RowFields::NAME));
-
-        users.push_back(user);
-
-        sqlite3_step( stmt );
+        const std::string queryStr = std::format("SELECT * FROM {};", UserDTO::tableName);
+        Query(_db, queryStr).parse(users);
     }
+    catch (...)
+    {
 
-    sqlite3_finalize(stmt);
+    }
 
     return users;
 }
 
-bool UserDAO::insert(const DTOType && dto)
+bool UserDAO::insert(const DTOType&& dto)
 {
-    char* messaggeError;
-
     const std::string query = std::format(
         "INSERT INTO {} VALUES (NULL, '{}');",
         UserDTO::tableName,
         dto.name
     );
 
-    const int status = sqlite3_exec(_db, query.c_str(), nullptr, 0, &messaggeError);
-
-    if (status != SQLITE_OK)
+    try
     {
-        sqlite3_free(messaggeError);
-
+        Query(_db, query);
+    }
+    catch (...)
+    {
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 } //namespace app::db2

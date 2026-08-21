@@ -1,10 +1,9 @@
 #pragma once
 
-
 #include <DAO.h>
 #include <stdexcept>
+
 #include <memory>
-#include <sqlite3.h>
 
 namespace app::db2
 {

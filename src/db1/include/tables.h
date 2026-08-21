@@ -71,7 +71,7 @@ public:
         return EntryType::createTableScript;
     }
 
-    virtual std::string getInsertQuery(const EntryType& entry) = 0;
+    virtual std::string getInsertQuery(const EntryType& entry)   = 0;
     virtual EntryType   parse(const SQLiteQuery::Row& row) const = 0;
     virtual Entries     parse(const SQLiteQuery& query)    const = 0;
 

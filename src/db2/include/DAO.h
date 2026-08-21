@@ -1,9 +1,6 @@
 #pragma once
 
-#include <sqlite3.h>
-#include <vector>
-
-#include "DTO.h"
+#include "Query.h"
 
 namespace app::db2
 {
@@ -32,7 +29,6 @@ class UserDAO final : public IDAO<UserDTO>
 public:
     UserDAO() = delete;
     explicit UserDAO(sqlite3* db);
-    ~UserDAO();
 
     std::vector<DTOType> selectAll() override;
     bool insert(const DTOType &&) override;
