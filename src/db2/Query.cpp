@@ -1,47 +1,62 @@
 #include "Query.h"
 
+#include "Database.h"
+
 #include <iostream>
 #include <stdexcept>
 
 namespace app::db2
 {
 
-Query::Query(sqlite3* db, const std::string& queryStr) :
-    _db(db),
-    stmt(nullptr),
+IQuery::IQuery(IDB* idb, const std::string& queryStr) :
+    _db(idb),
     _queryStr(queryStr)
 {
-    int rc = sqlite3_prepare_v2(_db, _queryStr.c_str(), -1, &stmt, nullptr);
 
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(_db) << "\n";
-        throw std::runtime_error("Query error");
-    }
-
-    rc = sqlite3_step(stmt);
-
-    if (rc == SQLITE_ROW)
-    {
-        // Это SELECT-запрос
-        return;
-    }
-    else if (rc == SQLITE_DONE)
-    {
-        // Успех
-        sqlite3_finalize(stmt);
-        return;
-    }
-    else
-    {
-        // Ошибка выполнения
-        std::cerr << "Failed to execute statement: " << sqlite3_errmsg(_db) << "\n";
-        sqlite3_finalize(stmt);
-        throw std::runtime_error("Query error");
-    }
 }
 
-void Query::parse(std::vector<UserDTO>& results)
+SQLiteQuery::SQLiteQuery(SQLiteDB* idb, const std::string& queryStr) :
+    IQuery(dynamic_cast<IDB*>(idb), queryStr),
+    stmt(nullptr)
+{
+    //if (SQLiteDB* _db = dynamic_cast<SQLiteDB*>(idb))
+    //{
+        int rc = sqlite3_prepare_v2(idb->_db, _queryStr.c_str(), -1, &stmt, nullptr);
+
+        if (rc != SQLITE_OK)
+        {
+            std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(idb->_db) << "\n";
+            throw std::runtime_error("Query error");
+        }
+
+        rc = sqlite3_step(stmt);
+
+        if (rc == SQLITE_ROW)
+        {
+            // Это SELECT-запрос
+            return;
+        }
+        else if (rc == SQLITE_DONE)
+        {
+            // Успех
+            sqlite3_finalize(stmt);
+            return;
+        }
+        else
+        {
+            // Ошибка выполнения
+            std::cerr << "Failed to execute statement: " << sqlite3_errmsg(idb->_db) << "\n";
+            sqlite3_finalize(stmt);
+            throw std::runtime_error("Query error");
+        }
+    //}
+    //else
+    //{
+    //    throw std::runtime_error("Query error Capability Query");
+    //}
+}
+
+void SQLiteQuery::parse(std::vector<UserDTO>& results)
 {
     if (!stmt)
     {
@@ -63,6 +78,20 @@ void Query::parse(std::vector<UserDTO>& results)
     while (sqlite3_step(stmt) == SQLITE_ROW);
 
     sqlite3_finalize(stmt);
+}
+
+std::shared_ptr<IQuery> getQuery(const std::shared_ptr<IDB> &idb, const std::string &queryStr)
+{
+    if (SQLiteDB* _db = dynamic_cast<SQLiteDB*>(idb.get()))
+    {
+        return std::make_shared<SQLiteQuery>(_db, queryStr);
+    }
+    else
+    {
+        throw std::runtime_error("Query error Capability Query");
+    }
+
+    throw std::runtime_error("Query error Capability Query");
 }
 
 } // namespace app::db2

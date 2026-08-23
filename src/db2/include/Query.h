@@ -2,24 +2,42 @@
 
 #include <sqlite3.h>
 #include <vector>
+#include <memory>
 
 #include "DTO.h"
 
 namespace app::db2
 {
 
-class Query
+class IDB;
+class SQLiteDB;
+
+class IQuery
 {
 public:
-    Query() = delete;
-    Query(sqlite3* db, const std::string& queryStr);
+    IQuery() = delete;
+    IQuery(IDB* idb, const std::string& queryStr);
 
-    void parse(std::vector<UserDTO>& results);
+    virtual void parse(std::vector<UserDTO>& results) = 0;
+
+protected:
+    IDB* _db;
+    std::string _queryStr;
+
+};
+
+class SQLiteQuery final : public IQuery
+{
+public:
+    SQLiteQuery() = delete;
+    SQLiteQuery(SQLiteDB* idb, const std::string& queryStr);
+
+    void parse(std::vector<UserDTO>& results) override;
 
 private:
-    sqlite3* _db;
     sqlite3_stmt* stmt;
-    std::string _queryStr;
 };
+
+std::shared_ptr<IQuery> getQuery(const std::shared_ptr<IDB>& idb, const std::string& queryStr);
 
 } // namespace app::db2

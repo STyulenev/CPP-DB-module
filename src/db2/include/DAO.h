@@ -5,14 +5,16 @@
 namespace app::db2
 {
 
+class IDB;
+
 template<typename T>
 class IDAO
 {
 protected:
-    sqlite3* _db;
+    std::shared_ptr<IDB> _db;
 
     IDAO() = delete;
-    IDAO(sqlite3* db) : _db(db) {}
+    IDAO(const std::shared_ptr<IDB>& db) : _db(db) {}
 
 public:
     typedef T DTOType;
@@ -28,7 +30,7 @@ class UserDAO final : public IDAO<UserDTO>
 {   
 public:
     UserDAO() = delete;
-    explicit UserDAO(sqlite3* db);
+    explicit UserDAO(const std::shared_ptr<IDB>& db);
 
     std::vector<DTOType> selectAll() override;
     bool insert(const DTOType &&) override;

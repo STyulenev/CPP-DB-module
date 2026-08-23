@@ -9,7 +9,7 @@ class Transaction final
 {
 public:
     template<typename Lambda>
-    Transaction(SQLiteDB& _db, bool& status, Lambda&& lambda) : m_db{ _db }
+    Transaction(std::shared_ptr<IDB>& _db, bool& status, Lambda&& lambda) : m_db{ _db }
     {
         status = false;
 
@@ -45,7 +45,7 @@ public:
     void rollback();
 
 private:
-    SQLiteDB& m_db;
+    std::shared_ptr<IDB> m_db;
 
 };
 

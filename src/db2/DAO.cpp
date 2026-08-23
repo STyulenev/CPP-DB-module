@@ -9,7 +9,7 @@
 namespace app::db2
 {
 
-UserDAO::UserDAO(sqlite3* db) :
+UserDAO::UserDAO(const std::shared_ptr<IDB>& db) :
     IDAO(db)
 {
 
@@ -22,7 +22,7 @@ std::vector<UserDTO> UserDAO::selectAll()
     try
     {
         const std::string queryStr = std::format("SELECT * FROM {};", DTOType::tableName);
-        Query(_db, queryStr).parse(users);
+        getQuery(_db, queryStr)->parse(users);
     }
     catch (...)
     {
@@ -42,7 +42,7 @@ bool UserDAO::insert(const DTOType&& dto)
 
     try
     {
-        Query(_db, query);
+        getQuery(_db, query);
     }
     catch (...)
     {

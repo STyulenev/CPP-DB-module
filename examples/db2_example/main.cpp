@@ -7,15 +7,15 @@ void db2Test()
 {
     using namespace app::db2;
 
-    SQLiteDB db;
+    std::shared_ptr<IDB> db = std::make_shared<SQLiteDB>();
 
-    if (db.open() && db.generateDB())
+    if (db->open() && db->generateDB())
     {
         bool status{ false };
 
         Transaction(db, status, [&]() -> void
         {
-            auto dao = db.getDAO<UserDTO>();
+            auto dao = getDAO<UserDTO>(db);
 
             bool status = dao->insert(
                 UserDTO{
