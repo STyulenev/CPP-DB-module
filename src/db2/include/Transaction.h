@@ -39,6 +39,7 @@ public:
         throw std::runtime_error("");
     }
 
+private:
     void beginTransaction();
     void endTransaction();
     void commit();

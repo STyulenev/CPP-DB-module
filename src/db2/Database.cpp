@@ -3,9 +3,19 @@
 namespace app::db2
 {
 
-SQLiteDB::SQLiteDB() :
-    _db(nullptr),
+IDB::IDB() :
     _isOpen(false)
+{
+
+}
+
+IDB::~IDB()
+{
+
+}
+
+SQLiteDB::SQLiteDB() :
+    _db(nullptr)
 {
 
 }

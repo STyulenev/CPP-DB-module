@@ -3,7 +3,6 @@
 #include <DAO.h>
 #include <stdexcept>
 
-
 namespace app::db2
 {
 
@@ -12,20 +11,25 @@ class IDB
     friend class Transaction;
 
 public:
+    IDB();
+    virtual ~IDB();
+
     virtual bool open() = 0;
     virtual void close() = 0;
 
     virtual bool generateDB() = 0;
 
+protected:
+    bool _isOpen;
+
 };
 
-class SQLiteDB : public IDB
+class SQLiteDB final : public IDB
 {
     friend SQLiteQuery;
 
 private:
     sqlite3* _db;
-    bool _isOpen;
 
 public:
     SQLiteDB();
