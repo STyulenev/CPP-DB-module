@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Database.h"
+#include "Transaction.h"
 
 void db2Test()
 {
@@ -10,24 +11,29 @@ void db2Test()
 
     if (db.open() && db.generateDB())
     {
-        auto dao = db.getDAO<UserDTO>();
+        bool status{ false };
 
-        bool status = dao->insert(
-            UserDTO{
-                .name = "Mike"
-            });
-
-        if (!status)
+        Transaction(db, status, [&]() -> void
         {
-            throw std::runtime_error("");
-        }
+            auto dao = db.getDAO<UserDTO>();
 
-        auto users = dao->selectAll();
+            bool status = dao->insert(
+                UserDTO{
+                    .name = "Mike"
+                });
 
-        for (auto& user : users)
-        {
-            std::cout << user.id << " " << user.name << "\n";
-        }
+            if (!status)
+            {
+                throw std::runtime_error("");
+            }
+
+            auto users = dao->selectAll();
+
+            for (auto& user : users)
+            {
+                std::cout << user.id << " " << user.name << "\n";
+            }
+        });
     }
 }
 

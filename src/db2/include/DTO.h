@@ -14,7 +14,7 @@ struct IDTO
     static std::string createTableScript;
 };
 
-struct UserDTO : public IDTO<UserDTO>
+struct UserDTO final : public IDTO<UserDTO>
 {
     int         id;
     std::string name;

@@ -21,7 +21,7 @@ std::vector<UserDTO> UserDAO::selectAll()
 
     try
     {
-        const std::string queryStr = std::format("SELECT * FROM {};", UserDTO::tableName);
+        const std::string queryStr = std::format("SELECT * FROM {};", DTOType::tableName);
         Query(_db, queryStr).parse(users);
     }
     catch (...)
@@ -36,7 +36,7 @@ bool UserDAO::insert(const DTOType&& dto)
 {
     const std::string query = std::format(
         "INSERT INTO {} VALUES (NULL, '{}');",
-        UserDTO::tableName,
+        DTOType::tableName,
         dto.name
     );
 

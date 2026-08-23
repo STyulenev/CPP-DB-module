@@ -10,6 +10,8 @@ namespace app::db2
 
 class SQLiteDB
 {
+    friend class Transaction;
+
 private:
     sqlite3* _db;
     bool _isOpen;
