@@ -15,11 +15,11 @@ QueryBuilder& QueryBuilder::select(const std::string& values)
 {
     if (values.empty())
     {
-        m_query += "SELECT *";
+        m_query += "SELECT * ";
     }
     else
     {
-        m_query = m_query + std::format("SELECT {}", values);
+        m_query = m_query + std::format("SELECT {} ", values);
     }
 
     return *this;
@@ -27,37 +27,31 @@ QueryBuilder& QueryBuilder::select(const std::string& values)
 
 QueryBuilder& QueryBuilder::from(const std::string &table)
 {
-    m_query = m_query + std::format("FROM {}", table);
+    m_query = m_query + std::format("FROM {} ", table);
     return *this;
 }
 
 QueryBuilder& QueryBuilder::limit(const int limit)
 {
-    m_query = m_query + std::format("LIMIT {}", limit);
+    m_query = m_query + std::format("LIMIT {} ", limit);
     return *this;
 }
 
 QueryBuilder& QueryBuilder::offset(const int offset)
 {
-    m_query = m_query + std::format("OFFSET {}", offset);
+    m_query = m_query + std::format("OFFSET {} ", offset);
     return *this;
 }
 
 QueryBuilder& QueryBuilder::orderBy(const std::string &&column, const SortType type)
 {
-    m_query = m_query + std::format("ORDER BY {} {}", column, getSortType(type));
+    m_query = m_query + std::format("ORDER BY {} {} ", column, getSortType(type));
     return *this;
 }
 
 QueryBuilder& QueryBuilder::comma_()
 {
     m_query += ", ";
-    return *this;
-}
-
-QueryBuilder& QueryBuilder::spase()
-{
-    m_query += " ";
     return *this;
 }
 

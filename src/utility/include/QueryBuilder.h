@@ -37,7 +37,6 @@ public:
     QueryBuilder& orderBy(const std::string&& column, const SortType type = SortType::ASC);
 
     QueryBuilder& comma_();
-    QueryBuilder& spase();
     QueryBuilder& _and_();
     QueryBuilder& _or_();
     QueryBuilder& end();
