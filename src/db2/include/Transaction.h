@@ -2,51 +2,29 @@
 
 #include "Database.h"
 
+#include <functional>
+
 namespace app::db2
 {
 
 class Transaction final
 {
 public:
-    template<typename Lambda>
-    Transaction(std::shared_ptr<IDB>& _db, bool& status, Lambda&& lambda) : m_db{ _db }
-    {
-        status = false;
+    Transaction() = delete;
+    explicit Transaction(std::shared_ptr<IDB>& db);
+    ~Transaction();
 
-        try
-        {
-            beginTransaction();
-            lambda();
-            endTransaction();
-            //commit();
-            status = true;
-            return;
-        }
-        catch (...)
-        {
+    Transaction(const Transaction&) = delete;
+    Transaction& operator=(const Transaction&) = delete;
+    Transaction(Transaction&&) = delete;
+    Transaction& operator=(Transaction&&) = delete;
 
-        }
-
-        try
-        {
-            rollback();
-        }
-        catch (...)
-        {
-
-        }
-
-        throw std::runtime_error("");
-    }
-
-private:
-    void beginTransaction();
-    void endTransaction();
-    void commit();
-    void rollback();
+    Transaction& transaction(const std::function<void()>& func);
+    Transaction& error(const std::function<void()>& func) noexcept;
 
 private:
     std::shared_ptr<IDB> m_db;
+    bool                 m_error;
 
 };
 

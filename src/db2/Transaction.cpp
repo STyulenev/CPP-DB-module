@@ -6,24 +6,68 @@
 namespace app::db2
 {
 
-void Transaction::beginTransaction()
+Transaction::Transaction(std::shared_ptr<IDB> &_db) :
+    m_db{ _db },
+    m_error{ false }
 {
-    getQuery(m_db, consts::SQLConsts::begin_transaction);
+    std::shared_ptr<IQuery> query = getQuery(m_db, consts::SQLConsts::begin_transaction);
+    query->exec();
 }
 
-void Transaction::endTransaction()
+Transaction::~Transaction()
 {
-    getQuery(m_db, consts::SQLConsts::end_transaction);
+    try
+    {
+        std::shared_ptr<IQuery> query = getQuery(m_db, consts::SQLConsts::end_transaction);
+        query->exec();
+    }
+    catch (...)
+    {
+        std::terminate();
+    }
 }
 
-void Transaction::commit()
+Transaction& Transaction::transaction(const std::function<void ()>& func)
 {
-    getQuery(m_db, consts::SQLConsts::commit);
+    if (!m_error)
+    {
+        try
+        {
+            func();
+
+            std::shared_ptr<IQuery> query = getQuery(m_db, consts::SQLConsts::commit);
+            query->exec();
+        }
+        catch (...)
+        {
+
+            m_error = true;
+        }
+    }
+
+    return *this;
 }
 
-void Transaction::rollback()
+Transaction& Transaction::error(const std::function<void ()>& func) noexcept
 {
-    getQuery(m_db, consts::SQLConsts::rollback);
+    if (m_error)
+    {
+        func();
+
+        try
+        {
+            std::shared_ptr<IQuery> query = getQuery(m_db, consts::SQLConsts::rollback);
+            query->exec();
+
+            m_error = false;
+        }
+        catch (...)
+        {
+
+        }
+    }
+
+    return *this;
 }
 
 } // namespace app::db2

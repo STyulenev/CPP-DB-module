@@ -38,6 +38,9 @@ bool SQLiteDB::generateDB()
 {
     try
     {
+        //std::shared_ptr<IQuery> query = getQuery(_db, queryStr);
+        //query->exec();
+
         char* messaggeError;
 
         const int status = sqlite3_exec(_db, UserDTO::createTableScript.c_str(), nullptr, 0, &messaggeError);

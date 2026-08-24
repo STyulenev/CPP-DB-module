@@ -18,6 +18,9 @@ public:
     IQuery() = delete;
     IQuery(IDB* idb, const std::string& queryStr);
 
+    virtual void prepare() = 0;
+    virtual void exec() = 0;
+
     virtual void parse(std::vector<UserDTO>& results) = 0;
 
 protected:
@@ -31,6 +34,9 @@ class SQLiteQuery final : public IQuery
 public:
     SQLiteQuery() = delete;
     SQLiteQuery(SQLiteDB* idb, const std::string& queryStr);
+
+    void prepare() override;
+    void exec() override;
 
     void parse(std::vector<UserDTO>& results) override;
 

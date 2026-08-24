@@ -13,10 +13,11 @@ void db2Test()
     {
         bool status{ false };
 
-        Transaction(db, status, [&]() -> void
-        {
-            auto dao = getDAO<UserDTO>(db);
+        auto dao = getDAO<UserDTO>(db);
 
+        Transaction(db)
+        .transaction([&]() -> void
+        {
             bool status = dao->insert(
                 UserDTO{
                     .name = "Mike"
@@ -33,6 +34,26 @@ void db2Test()
             {
                 std::cout << user.id << " " << user.name << "\n";
             }
+        })
+        .error([&]() -> void
+        {
+            std::cout << "An error occurred" << "\n";
+        })
+        .transaction([&]() -> void
+        {
+            auto users = dao->selectAll();
+
+            for (auto& user : users)
+            {
+                std::cout << user.id << " " << user.name << "\n";
+            }
+
+            // Test error
+            throw std::runtime_error("");
+         })
+        .error([&]() -> void
+        {
+            std::cout << "An error occurred" << "\n";
         });
     }
 }

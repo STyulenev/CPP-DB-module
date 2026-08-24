@@ -22,7 +22,9 @@ std::vector<UserDTO> UserDAO::selectAll()
     try
     {
         const std::string queryStr = std::format("SELECT * FROM {};", DTOType::tableName);
-        getQuery(_db, queryStr)->parse(users);
+        std::shared_ptr<IQuery> query = getQuery(_db, queryStr);
+        query->prepare();
+        query->parse(users);
     }
     catch (...)
     {
@@ -34,7 +36,7 @@ std::vector<UserDTO> UserDAO::selectAll()
 
 bool UserDAO::insert(const DTOType&& dto)
 {
-    const std::string query = std::format(
+    const std::string queryStr = std::format(
         "INSERT INTO {} VALUES (NULL, '{}');",
         DTOType::tableName,
         dto.name
@@ -42,7 +44,9 @@ bool UserDAO::insert(const DTOType&& dto)
 
     try
     {
-        getQuery(_db, query);
+        std::shared_ptr<IQuery> query = getQuery(_db, queryStr);
+        //query->prepare();
+        query->exec();
     }
     catch (...)
     {

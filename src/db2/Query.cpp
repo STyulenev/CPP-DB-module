@@ -19,13 +19,18 @@ SQLiteQuery::SQLiteQuery(SQLiteDB* idb, const std::string& queryStr) :
     IQuery(dynamic_cast<IDB*>(idb), queryStr),
     stmt(nullptr)
 {
-    //if (SQLiteDB* _db = dynamic_cast<SQLiteDB*>(idb))
-    //{
-        int rc = sqlite3_prepare_v2(idb->_db, _queryStr.c_str(), -1, &stmt, nullptr);
+
+}
+
+void SQLiteQuery::prepare()
+{
+    if (SQLiteDB* db = dynamic_cast<SQLiteDB*>(_db))
+    {
+        int rc = sqlite3_prepare_v2(db->_db, _queryStr.c_str(), -1, &stmt, nullptr);
 
         if (rc != SQLITE_OK)
         {
-            std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(idb->_db) << "\n";
+            std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db->_db) << "\n";
             throw std::runtime_error("Query error");
         }
 
@@ -45,15 +50,32 @@ SQLiteQuery::SQLiteQuery(SQLiteDB* idb, const std::string& queryStr) :
         else
         {
             // Ошибка выполнения
-            std::cerr << "Failed to execute statement: " << sqlite3_errmsg(idb->_db) << "\n";
+            std::cerr << "Failed to execute statement: " << sqlite3_errmsg(db->_db) << "\n";
             sqlite3_finalize(stmt);
             throw std::runtime_error("Query error");
         }
-    //}
-    //else
-    //{
-    //    throw std::runtime_error("Query error Capability Query");
-    //}
+    }
+    else
+    {
+        throw std::runtime_error("Query error Capability Query");
+    }
+}
+
+void SQLiteQuery::exec()
+{
+    if (SQLiteDB* db = dynamic_cast<SQLiteDB*>(_db))
+    {
+        int rc = sqlite3_exec(db->_db, _queryStr.c_str(), nullptr, nullptr, nullptr);
+
+        if (rc == SQLITE_DONE)
+        {
+            // ...
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Query error Capability Query");
+    }
 }
 
 void SQLiteQuery::parse(std::vector<UserDTO>& results)
