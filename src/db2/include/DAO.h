@@ -21,8 +21,8 @@ public:
 
     virtual ~IDAO() = default;
 
-    virtual std::vector<T> selectAll() = 0;
-    virtual bool insert(const T &&) = 0;
+    virtual std::vector<T> selectAll() noexcept = 0;
+    virtual bool insert(const T &&) noexcept = 0;
 
 };
 
@@ -32,8 +32,8 @@ public:
     UserDAO() = delete;
     explicit UserDAO(const std::shared_ptr<IDB>& db);
 
-    std::vector<DTOType> selectAll() override;
-    bool insert(const DTOType &&) override;
+    std::vector<DTOType> selectAll() noexcept override;
+    bool insert(const DTOType &&) noexcept override;
 
 };
 

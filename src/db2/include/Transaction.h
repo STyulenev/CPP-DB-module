@@ -23,6 +23,10 @@ public:
     Transaction& error(const std::function<void()>& func) noexcept;
 
 private:
+    void* operator new(std::size_t)   = delete;
+    void* operator new[](std::size_t) = delete;
+
+private:
     std::shared_ptr<IDB> m_db;
     bool                 m_error;
 

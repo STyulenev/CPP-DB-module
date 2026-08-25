@@ -8,15 +8,15 @@
 namespace app::db2
 {
 
-IQuery::IQuery(IDB* idb, const std::string& queryStr) :
-    _db(idb),
+IQuery::IQuery(const std::string& queryStr) :
     _queryStr(queryStr)
 {
 
 }
 
 SQLiteQuery::SQLiteQuery(SQLiteDB* idb, const std::string& queryStr) :
-    IQuery(dynamic_cast<IDB*>(idb), queryStr),
+    IQuery(queryStr),
+    _db(idb),
     stmt(nullptr)
 {
 
@@ -24,57 +24,43 @@ SQLiteQuery::SQLiteQuery(SQLiteDB* idb, const std::string& queryStr) :
 
 void SQLiteQuery::prepare()
 {
-    if (SQLiteDB* db = dynamic_cast<SQLiteDB*>(_db))
+    int status = sqlite3_prepare_v2(_db->_db, _queryStr.c_str(), -1, &stmt, nullptr);
+
+    if (status != SQLITE_OK)
     {
-        int rc = sqlite3_prepare_v2(db->_db, _queryStr.c_str(), -1, &stmt, nullptr);
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(_db->_db) << "\n";
+        throw std::runtime_error("Query error");
+    }
 
-        if (rc != SQLITE_OK)
-        {
-            std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db->_db) << "\n";
-            throw std::runtime_error("Query error");
-        }
+    status = sqlite3_step(stmt);
 
-        rc = sqlite3_step(stmt);
-
-        if (rc == SQLITE_ROW)
-        {
-            // Это SELECT-запрос
-            return;
-        }
-        else if (rc == SQLITE_DONE)
-        {
-            // Успех
-            sqlite3_finalize(stmt);
-            return;
-        }
-        else
-        {
-            // Ошибка выполнения
-            std::cerr << "Failed to execute statement: " << sqlite3_errmsg(db->_db) << "\n";
-            sqlite3_finalize(stmt);
-            throw std::runtime_error("Query error");
-        }
+    if (status == SQLITE_ROW)
+    {
+        // Это SELECT-запрос
+        return;
+    }
+    else if (status == SQLITE_DONE)
+    {
+        // Успех
+        sqlite3_finalize(stmt);
+        return;
     }
     else
     {
-        throw std::runtime_error("Query error Capability Query");
+        // Ошибка выполнения
+        std::cerr << "Failed to execute statement: " << sqlite3_errmsg(_db->_db) << "\n";
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Query error");
     }
 }
 
 void SQLiteQuery::exec()
 {
-    if (SQLiteDB* db = dynamic_cast<SQLiteDB*>(_db))
-    {
-        int rc = sqlite3_exec(db->_db, _queryStr.c_str(), nullptr, nullptr, nullptr);
+    const int status = sqlite3_exec(_db->_db, _queryStr.c_str(), nullptr, nullptr, nullptr);
 
-        if (rc == SQLITE_DONE)
-        {
-            // ...
-        }
-    }
-    else
+    if (status != SQLITE_OK)
     {
-        throw std::runtime_error("Query error Capability Query");
+        throw std::runtime_error("Query error");
     }
 }
 

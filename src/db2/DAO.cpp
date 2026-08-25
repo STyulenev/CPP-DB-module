@@ -15,7 +15,7 @@ UserDAO::UserDAO(const std::shared_ptr<IDB>& db) :
 
 }
 
-std::vector<UserDTO> UserDAO::selectAll()
+std::vector<UserDTO> UserDAO::selectAll() noexcept
 {
     std::vector<UserDTO> users;
 
@@ -34,7 +34,7 @@ std::vector<UserDTO> UserDAO::selectAll()
     return users;
 }
 
-bool UserDAO::insert(const DTOType&& dto)
+bool UserDAO::insert(const DTOType&& dto) noexcept
 {
     const std::string queryStr = std::format(
         "INSERT INTO {} VALUES (NULL, '{}');",

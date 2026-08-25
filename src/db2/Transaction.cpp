@@ -23,7 +23,7 @@ Transaction::~Transaction()
     }
     catch (...)
     {
-        std::terminate();
+        //std::terminate();
     }
 }
 

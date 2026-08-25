@@ -16,15 +16,14 @@ class IQuery
 {
 public:
     IQuery() = delete;
-    IQuery(IDB* idb, const std::string& queryStr);
+    IQuery(const std::string& queryStr);
 
     virtual void prepare() = 0;
-    virtual void exec() = 0;
+    virtual void exec()    = 0;
 
     virtual void parse(std::vector<UserDTO>& results) = 0;
 
 protected:
-    IDB* _db;
     std::string _queryStr;
 
 };
@@ -41,6 +40,7 @@ public:
     void parse(std::vector<UserDTO>& results) override;
 
 private:
+    SQLiteDB* _db;
     sqlite3_stmt* stmt;
 };
 
