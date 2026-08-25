@@ -18,7 +18,6 @@ namespace app::db1
 
     void Db::setDatabasePath(const std::string& _db_path)
 	{
-
         m_connection->setPath(_db_path);
 	}
 
@@ -47,6 +46,7 @@ namespace app::db1
 			}
 
 		    bool bRet{ false };
+            std::lock_guard lock(m_sync);
 		    Transaction(*this, bRet, [&]()
 		    {
 				// Tables:

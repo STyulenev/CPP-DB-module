@@ -2,6 +2,7 @@
 
 #include <DAO.h>
 #include <stdexcept>
+#include <mutex>
 
 namespace app::db2
 {
@@ -30,6 +31,7 @@ class SQLiteDB final : public IDB
 
 private:
     sqlite3* _db;
+    std::recursive_mutex _sync;
 
 public:
     SQLiteDB();
@@ -38,6 +40,8 @@ public:
     void close() override;
 
     bool generateDB() override;
+
+    std::recursive_mutex& getLocker();
 
 };
 

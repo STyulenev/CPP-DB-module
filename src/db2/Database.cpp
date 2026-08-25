@@ -65,4 +65,9 @@ bool SQLiteDB::generateDB()
     return true;
 }
 
+std::recursive_mutex& SQLiteDB::getLocker()
+{
+    return _sync;
+}
+
 } // namespace app::db2

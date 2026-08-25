@@ -15,6 +15,8 @@ void db2Test()
 
         auto dao = getDAO<UserDTO>(db);
 
+        std::lock_guard<std::recursive_mutex> lock(dynamic_cast<SQLiteDB*>(db.get())->getLocker());
+
         Transaction(db)
         .transaction([&]() -> void
         {
@@ -34,6 +36,8 @@ void db2Test()
             {
                 std::cout << user.id << " " << user.name << "\n";
             }
+
+            std::cout << "\n";
         })
         .error([&]() -> void
         {
@@ -47,6 +51,8 @@ void db2Test()
             {
                 std::cout << user.id << " " << user.name << "\n";
             }
+
+            std::cout << "\n";
 
             // Test error
             throw std::runtime_error("");
